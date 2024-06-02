@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DRM Access in Iframe</title>
+    <script>
+        async function requestDRMAccess() {
+            try {
+                const mediaKeySystemAccess = await navigator.requestMediaKeySystemAccess('com.widevine.alpha', [{
+                    initDataTypes: ['cenc'],
+                    audioCapabilities: [{
+                        contentType: 'audio/mp4; codecs="mp4a.40.2"'
+                    }],
+                    videoCapabilities: [{
+                        contentType: 'video/mp4; codecs="avc1.42E01E"'
+                    }]
+                }]);
+
+                console.log('Media key system access granted1234:', mediaKeySystemAccess);
+            } catch (error) {
+                console.error('Failed to obtain media key system access:', error);
+            }
+        }
+
+        // Call the function to request DRM access
+        requestDRMAccess();
+    </script>
+</head>
+<body>
+    <h1>anouther tab</h1>
+</body>
+</html>
+
+
+
