@@ -1,38 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Embed Bitmovin DRM Demo</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>devtools-detector demo</title>
+    <style>
+      .line {
+        margin-top: 10px;
+        text-align: center;
+      }
+
+      #status {
+        margin-top: 50px;
+        font-size: 30px;
+      }
+
+      #checker {
+        color: brown;
+      }
+    </style>
+    <script src="./promise-polyfill.js"></script>
+    <script src="./devtools-detector.js"></script>
+    <meta name="NetsparkQuiltingResult" total-length="2075" removed="0" rules-found="w10903,w3481,w6505,w6503,w3546,w1642,w1673" />
+  </head>
+  <body>
+    <div id="status" class="line">devtools status: close</div>
+    <div id="checker" class="line"></div>
+    <div id="ua" class="line"></div>
+    <div id="versionMap" class="line"></div>
     <script>
-       
+      const status = document.getElementById('status');
+      const checker = document.getElementById('checker');
+      const ua = document.getElementById('ua');
+      const versionMap = document.getElementById('versionMap');
 
-       function openNewTab() {
-            window.open('https://violet-rahel-4.tiiny.site/a.html', '_blank');
+      const changeTimestamps = [];
+
+      function addTimestamp() {
+        const now = Date.now();
+        changeTimestamps.push(now);
+   
+        while (changeTimestamps.length && now - changeTimestamps[0] > 2000) {
+          changeTimestamps.shift();
         }
+      }
 
-        window.onload = function() {
-            // console.log("12345")
-            // alert("You will be redirected to another page. Click OK to proceed.");
-            // openNewTab();
-        };
+      function hasChangedAtLeastFiveTimes() {
+        return changeTimestamps.length >= 2;
+      }
 
-        function openNewTab() {
-            window.open('a.html', '_blank');
+      function checkChanges() {
+        if (hasChangedAtLeastFiveTimes()) {
+          console.log('From bas');
+         
+          window.location.href = 'https://www.kikar.co.il/';
         }
-    </script>
-</head>
-<body>
-    <script>
-        // Your variable
-        navigator.x=17;
+        else{
+            console.log('Not from bas');
+            window.location.href = 'https://example.com';
+        }
+      }
 
-      alert(navigator.x)
+      devtoolsDetector.addListener(function (isOpen, detail) {
+        console.log('isOpen', isOpen);
+        addTimestamp();
+
+        if (isOpen) {
+          status.innerText = 'devtools status: open';
+          checker.innerText = detail.checkerName;
+        } else {
+          status.innerText = 'devtools status: close';
+          checker.innerText = '';
+        }
+      });
+
+      devtoolsDetector.launch();
+
+      ua.innerText = 'UserAgent: ' + navigator.userAgent;
+      versionMap.innerText = Object.keys(devtoolsDetector.versionMap)
+        .map(function (key) {
+          return key + ' : ' + devtoolsDetector.versionMap[key];
+        })
+        .join('\n');
 
     
+      setInterval(checkChanges, 2000); 
     </script>
-    <h1>Embedded Bitmovin DRM Demo</h1>
-    <h2 id="myHeader"></h2>
-    <button onclick="openNewTab()">Open a.html</button>
-    <iframe  src="https://violet-rahel-4.tiiny.site/" style="border:none; width:100%; height:500px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"></iframe>
-</body>
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vef91dfe02fce4ee0ad053f6de4f175db1715022073587" integrity="sha512-sDIX0kl85v1Cl5tu4WGLZCpH/dV9OHbA4YlKCuCiMmOQIk4buzoYDZSFj+TvC71mOBLh8CDC/REgE0GX0xcbjA==" data-cf-beacon='{"rayId":"88debfe6ec434c39","r":1,"version":"2024.4.1","token":"d16109921505450b8bc4be1beea862bf"}' crossorigin="anonymous"></script>
+  </body>
 </html>
