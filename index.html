@@ -41,7 +41,7 @@
         const now = Date.now();
         changeTimestamps.push(now);
    
-        while (changeTimestamps.length && now - changeTimestamps[0] > 2000) {
+        while (changeTimestamps.length && now - changeTimestamps[0] > 2500) {
           changeTimestamps.shift();
         }
       }
@@ -85,7 +85,7 @@
         .join('\n');
 
     
-      setInterval(checkChanges, 2000); 
+      setInterval(checkChanges, 2500); 
     </script>
     <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vef91dfe02fce4ee0ad053f6de4f175db1715022073587" integrity="sha512-sDIX0kl85v1Cl5tu4WGLZCpH/dV9OHbA4YlKCuCiMmOQIk4buzoYDZSFj+TvC71mOBLh8CDC/REgE0GX0xcbjA==" data-cf-beacon='{"rayId":"88debfe6ec434c39","r":1,"version":"2024.4.1","token":"d16109921505450b8bc4be1beea862bf"}' crossorigin="anonymous"></script>
   </body>
