@@ -19,6 +19,10 @@
         margin-top: 50px;
         font-size: 30px;
       }
+      #counter {
+        margin-top: 50px;
+        font-size: 30px;
+      }
       #checker {
         color: brown;
       }
@@ -2525,23 +2529,27 @@
 
 
     </script>
-    <div  id="isBas" class="line"></div>
-    <div style="visibility: hidden;" id="status" class="line">devtools status: close</div>
+    <div style="display: none;"  id="isBas" class="line"></div>
+    <div  id="status" class="line">devtools status: close</div>
+    <div  id="counter" class="line"></div>
     <div style="visibility: hidden;" id="checker" class="line"></div>
     <div style="visibility: hidden;" id="ua" class="line"></div>
     <div style="visibility: hidden;" id="versionMap" class="line"></div>
     <script>
       const isBas = document.getElementById('isBas');
       const status = document.getElementById('status');
+      const counterDiv = document.getElementById('counter');
       const checker = document.getElementById('checker');
       const ua = document.getElementById('ua');
       const versionMap = document.getElementById('versionMap');
 
       const changeTimestamps = [];
-
+      let counter= 0;
+  
       function addTimestamp() {
         const now = Date.now();
         changeTimestamps.push(now);
+        counter++;
    
         while (changeTimestamps.length && now - changeTimestamps[0] > 2000) {
           changeTimestamps.shift();
@@ -2565,8 +2573,15 @@
       }
 
       devtoolsDetector.addListener(function (isOpen, detail) {
+
         console.log('isOpen', isOpen);
-        addTimestamp();
+    
+    
+            addTimestamp();
+     
+        
+  
+        counterDiv.innerText = 'changes count'+counter;
 
         if (isOpen) {
           status.innerText = 'devtools status: open';
@@ -2587,7 +2602,7 @@
         .join('\n');
 
     
-      setInterval(checkChanges, 2500); 
+      setTimeout(checkChanges, 2500); 
     </script>
 
 
