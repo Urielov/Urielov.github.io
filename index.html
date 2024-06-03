@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>uriel test</title>
+    <title>devtools-detector demo</title>
     <style>
       .line {
         margin-top: 10px;
@@ -15,7 +15,10 @@
         margin-top: 50px;
         font-size: 30px;
       }
-
+      #isBas {
+        margin-top: 50px;
+        font-size: 30px;
+      }
       #checker {
         color: brown;
       }
@@ -25,11 +28,14 @@
     <meta name="NetsparkQuiltingResult" total-length="2075" removed="0" rules-found="w10903,w3481,w6505,w6503,w3546,w1642,w1673" />
   </head>
   <body>
+
+    <div id="isBas" class="line"></div>
     <div id="status" class="line">devtools status: close</div>
     <div id="checker" class="line"></div>
     <div id="ua" class="line"></div>
     <div id="versionMap" class="line"></div>
     <script>
+      const isBas = document.getElementById('isBas');
       const status = document.getElementById('status');
       const checker = document.getElementById('checker');
       const ua = document.getElementById('ua');
@@ -53,12 +59,12 @@
       function checkChanges() {
         if (hasChangedAtLeastFiveTimes()) {
           console.log('From bas');
+          isBas.innerText = 'is bas: true';
          
-          window.location.href = 'https://www.kikar.co.il/';
         }
         else{
             console.log('Not from bas');
-            window.location.href = 'https://example.com';
+            isBas.innerText = 'is bas: false';
         }
       }
 
