@@ -47,13 +47,13 @@
         const now = Date.now();
         changeTimestamps.push(now);
    
-        while (changeTimestamps.length && now - changeTimestamps[0] > 2500) {
+        while (changeTimestamps.length && now - changeTimestamps[0] > 2000) {
           changeTimestamps.shift();
         }
       }
 
       function hasChangedAtLeastFiveTimes() {
-        return changeTimestamps.length >= 2;
+        return changeTimestamps.length >= 1;
       }
 
       function checkChanges() {
