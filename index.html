@@ -50,7 +50,7 @@
         }
 
         function clear() {
-            // console.clear()
+            console.clear()
         }
 
         function log(data) {
@@ -61,23 +61,6 @@
         function table(data) {
             console.table(data)
 
-        }
-
-        function getPrettyTime() {
-            const now = new Date(Date.now());
-            const year = now.getFullYear();
-            const month = now.toLocaleString('default', { month: 'long' });
-            const day = now.getDate();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
-
-            return `${month} ${day}, ${year} ${hours}:${minutes}:${seconds}.${milliseconds}`;
-        }
-
-        function match({ includes, excludes }) {
-            return includes.some((condition) => condition) && !excludes.some((condition) => condition);
         }
 
         let maxPrintTime = 0;
@@ -93,13 +76,7 @@
                 if (tablePrintTime === 0) return false;
                 if (maxPrintTime === 0) return false;
                 return tablePrintTime > maxPrintTime * 5;
-            },
-            async isEnable() {
-                return match({
-                    includes: [() => navigator.userAgent.includes('Chrome')], // Check for Chrome
-                    excludes: [],
-                });
-            },
+            }
         };
 
         function calcTablePrintTime() {
@@ -126,7 +103,7 @@
         checkPerformance()
 
         async function checkPerformance() {
-            console.log(getPrettyTime())
+          
             var statusNow = await performanceChecker.isOpen()
 
             if (currentStatus!=null && currentStatus != statusNow) {
