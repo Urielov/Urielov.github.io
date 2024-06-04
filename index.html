@@ -50,7 +50,7 @@
         }
 
         function clear() {
-            console.clear()
+            // console.clear()
         }
 
         function log(data) {
@@ -61,6 +61,19 @@
         function table(data) {
             console.table(data)
 
+        }
+
+        function getPrettyTime() {
+            const now = new Date(Date.now());
+            const year = now.getFullYear();
+            const month = now.toLocaleString('default', { month: 'long' });
+            const day = now.getDate();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
+
+            return `${month} ${day}, ${year} ${hours}:${minutes}:${seconds}.${milliseconds}`;
         }
 
         function match({ includes, excludes }) {
@@ -106,30 +119,38 @@
         }
         const status = document.getElementById('status');
         const counterElement = document.getElementById('counter');
-        var counter=0;
-        var currentStatus=false;
-        async function checkPerformance() {
-            var statusNow=await performanceChecker.isOpen()
+        var counter = 0;
+        var currentStatus=null;
 
-            if(currentStatus!=statusNow){
+
+        checkPerformance()
+
+        async function checkPerformance() {
+            console.log(getPrettyTime())
+            var statusNow = await performanceChecker.isOpen()
+
+            if (currentStatus!=null && currentStatus != statusNow) {
                 counter++
-                counterElement.innerText = 'count changes: '+counter;
+                counterElement.innerText = 'count changes: ' + counter;
             }
 
             if (statusNow) {
                 console.log('open');
                 status.innerText = 'devtools status: open';
-                currentStatus=true;
+                currentStatus = true;
             } else {
                 console.log('close');
                 status.innerText = 'devtools status: close';
-                currentStatus=false;
+                currentStatus = false;
             }
 
-           
+
         }
 
-        setInterval(checkPerformance, 1000); 
+        const interval = setInterval(checkPerformance, 500);
+        setTimeout(() => {
+            clearInterval(interval);
+        }, 2500);
     </script>
 
 
