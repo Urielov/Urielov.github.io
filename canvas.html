@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Fingerprinting</title>
+
+
+
+    <style>
+
+       .line {
+            margin-top: 10px;
+            text-align: center;
+
+        
+        }
+
+    </style>
+</head>
+<body>
+
+
+    <h1 class="line">Canvas Fingerprinting</h1>
+    <div id="imageContainer" class="line"></div>
+    <div id="hashCode" class="line"></div>
+    <script>
+        function generateFingerprint() {
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+            
+          
+            ctx.textBaseline = 'top';
+            ctx.font = '14px Arial';
+            ctx.textBaseline = 'alphabetic';
+            ctx.fillStyle = '#f60';
+            ctx.fillRect(125, 1, 62, 20);
+            ctx.fillStyle = '#069';
+            ctx.fillText('Hello, world!', 2, 15);
+            ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
+            ctx.fillText('Hello, world!', 4, 17);
+
+          
+            var dataURL = canvas.toDataURL();
+            console.log("dataURL:"+dataURL)
+            var hash = 0;
+            for (var i = 0; i < dataURL.length; i++) {
+                var char = dataURL.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash |= 0; // Convert to 32bit integer
+            }
+            return { hash: hash, dataURL: dataURL };
+        }
+
+        var fingerprint = generateFingerprint();
+        console.log('Fingerprint: ', fingerprint.hash);
+
+
+        var img = document.createElement('img');
+        img.src = fingerprint.dataURL;
+        document.getElementById('imageContainer').appendChild(img);
+
+
+        const hashCode = document.getElementById('hashCode');
+        hashCode.innerText = 'hash code: '+fingerprint.hash;
+    </script>
+</body>
+</html>
