@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,28 +9,33 @@
 
 
     <style>
-
-       .line {
+        .line {
             margin-top: 10px;
             text-align: center;
 
-        
-        }
 
+        }
     </style>
 </head>
+
 <body>
 
 
     <h1 class="line">Canvas Fingerprinting</h1>
     <div id="imageContainer" class="line"></div>
     <div id="hashCode" class="line"></div>
+
+    <h1 class="line">Complex Canvas Fingerprinting</h1>
+    <div id="imageContainerComplex" class="line"></div>
+    <div id="hashCodeComplex" class="line"></div>
+
+
     <script>
         function generateFingerprint() {
             var canvas = document.createElement('canvas');
             var ctx = canvas.getContext('2d');
-            
-          
+
+
             ctx.textBaseline = 'top';
             ctx.font = '14px Arial';
             ctx.textBaseline = 'alphabetic';
@@ -40,9 +46,9 @@
             ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
             ctx.fillText('Hello, world!', 4, 17);
 
-          
+
             var dataURL = canvas.toDataURL();
-            console.log("dataURL:"+dataURL)
+            console.log("dataURL:" + dataURL)
             var hash = 0;
             for (var i = 0; i < dataURL.length; i++) {
                 var char = dataURL.charCodeAt(i);
@@ -51,6 +57,73 @@
             }
             return { hash: hash, dataURL: dataURL };
         }
+
+
+        function generateFingerprintComplex() {
+            var canvasComplex = document.createElement('canvas');
+            var ctxComplex = canvasComplex.getContext('2d');
+
+            // Basic text drawing
+            ctxComplex.textBaseline = 'top';
+            ctxComplex.font = '14px Arial';
+            ctxComplex.fillStyle = '#f60';
+            ctxComplex.fillText('Hello, world!', 2, 15);
+
+            // Basic shapes
+            ctxComplex.fillStyle = '#f60';
+            ctxComplex.fillRect(125, 1, 62, 20);
+
+            // Text with shadow
+            ctxComplex.shadowColor = 'rgba(0, 0, 0, 0.5)';
+            ctxComplex.shadowOffsetX = 2;
+            ctxComplex.shadowOffsetY = 2;
+            ctxComplex.shadowBlur = 2;
+            ctxComplex.fillText('Hello, world!', 2, 15);
+
+            // Gradient
+            var gradient = ctxComplex.createLinearGradient(0, 0, canvasComplex.width, 0);
+            gradient.addColorStop(0, 'red');
+            gradient.addColorStop(1, 'blue');
+            ctxComplex.fillStyle = gradient;
+            ctxComplex.fillRect(10, 10, 150, 80);
+
+            // Image manipulation
+            var img = new Image();
+
+            ctxComplex.drawImage(img, 0, 0);
+            var imageData = ctxComplex.getImageData(0, 0, canvasComplex.width, canvasComplex.height);
+            for (var i = 0; i < imageData.data.length; i += 4) {
+                imageData.data[i] = 255 - imageData.data[i]; // Invert red channel
+            }
+            ctxComplex.putImageData(imageData, 0, 0);
+
+            // Generate fingerprint from combined canvas operations
+            var dataURLComplex = canvasComplex.toDataURL();
+            var hashComplex = 0;
+            for (var i = 0; i < dataURLComplex.length; i++) {
+                var char = dataURLComplex.charCodeAt(i);
+                hashComplex = ((hashComplex << 5) - hashComplex) + char;
+                hashComplex |= 0; // Convert to 32bit integer
+            }
+            console.log('FingerprintComplex:', hashComplex);
+
+
+
+            var img1 = document.createElement('img');
+            img1.src = dataURLComplex;
+            document.getElementById('imageContainerComplex').appendChild(img1);
+
+
+            const hashCodeComplex = document.getElementById('hashCodeComplex');
+            hashCodeComplex.innerText = 'hash code Complex: ' + hashComplex;
+            // img.src = 'path/to/image.jpg';
+        }
+
+        generateFingerprintComplex();
+
+
+
+
 
         var fingerprint = generateFingerprint();
         console.log('Fingerprint: ', fingerprint.hash);
@@ -62,7 +135,51 @@
 
 
         const hashCode = document.getElementById('hashCode');
-        hashCode.innerText = 'hash code: '+fingerprint.hash;
+        hashCode.innerText = 'hash code: ' + fingerprint.hash;
+
+
+
+        function getBrowserAndOS() {
+            var ua = navigator.userAgent;
+            var browser = '';
+            var os = '';
+
+            // Detect browser
+            if (/edg/i.test(ua)) {
+                browser = 'Edge';
+            } else if (/firefox|fxios/i.test(ua)) {
+                browser = 'Firefox';
+            } else if (/chrome|crios|crmo/i.test(ua)) {
+                browser = 'Chrome';
+            } else if (/safari/i.test(ua)) {
+                browser = 'Safari';
+            } else if (/msie|trident/i.test(ua)) {
+                browser = 'Internet Explorer';
+            } else {
+                browser = 'Unknown';
+            }
+
+            // Detect OS
+            if (/windows/i.test(ua)) {
+                os = 'Windows';
+            } else if (/macintosh|mac os x/i.test(ua)) {
+                os = 'MacOS';
+            } else if (/linux/i.test(ua)) {
+                os = 'Linux';
+            } else if (/android/i.test(ua)) {
+                os = 'Android';
+            } else if (/iphone|ipad|ipod/i.test(ua)) {
+                os = 'iOS';
+            } else {
+                os = 'Unknown';
+            }
+
+            return { browser: browser, os: os };
+        }
+
+        console.log(getBrowserAndOS());
+
     </script>
 </body>
+
 </html>
